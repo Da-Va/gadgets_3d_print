@@ -10,6 +10,8 @@ HEAD_d = 15;
 HOSE_D = 13;
 HEAD_H = 30;
 CLAW_THICKNESS = 4;
+CLAW_Z_OFFSET = -5;
+CLAW_ANGLE = 35;
 
 module base() {
     rotate([0, -90,0]) {
@@ -29,8 +31,8 @@ module head() {
 }
 
 module CLAW_TRANSFORM() {
-    translate([20, 0, -5])
-        rotate([0, 35, 0])
+    translate([20, 0, CLAW_Z_OFFSET])
+        rotate([0, CLAW_ANGLE, 0])
             children();
 }
 
@@ -43,26 +45,22 @@ module cut() {
             cube([HOSE_D ,HOSE_D,3*HEAD_H], center=true);
     }
     
-    translate([0,0,M/2 + cos(35)*HEAD_H - 5]) 
+    translate([0,0,M/2 + cos(CLAW_ANGLE)*HEAD_H + CLAW_Z_OFFSET]) 
         cube(M, center=true);
     translate([0,0,-M/2 - cos(45)*MATING_D/2]) 
         cube(M, center=true);
 }
 
 module joint_cut() {
-    hull() for(i=[0:1]) {
-        translate([0,0,-i*10]) 
-            rotate([0, 90, 0]) {
-                translate([0,0, -EPS]) 
-                    cylinder(d=7, h=3);
-            }
-    }
-    hull() for(i=[0:1]) {
-        translate([0,0,-i*10]) 
-            rotate([0, 90, 0]) {
-                translate([0,0, 3]) 
-                    cylinder(d=10, h=3);
-            }
+    rotate([0, 90, 0]) {
+        hull() for(i=[0:1]) {
+            translate([i*10,0,-EPS]) 
+                cylinder(d=7, h=6);
+        }
+        hull() for(i=[0:1]) {
+            translate([i*10,0,3]) 
+                cylinder(d=10, h=3);
+        }
     }
 }
 
