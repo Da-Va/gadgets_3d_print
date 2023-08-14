@@ -11,7 +11,7 @@ HOSE_D = 13;
 HEAD_H = 30;
 CLAW_THICKNESS = 4;
 CLAW_Z_OFFSET = -5;
-CLAW_ANGLE = 35;
+CLAW_ANGLE = 45;
 
 module base() {
     rotate([0, -90,0]) {
