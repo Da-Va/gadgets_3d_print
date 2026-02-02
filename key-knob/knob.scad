@@ -6,6 +6,9 @@ KEY_WIDTH = 2.5;
 KEY_D = 25;
 KEY_COMB_H = 11;
 KEY_L = KEY_D + 30;
+KEY_HOLE_D = 5.5-0.5;
+KEY_HOLE_OFFSET = 3.3;
+KEY_HOLE_POSITION = [0,-KEY_D/2+KEY_HOLE_D/2+KEY_HOLE_OFFSET,0];
 
 HANDLE_R = 8;
 HANDLE_FACE_OFFSET = 1.5;
@@ -17,7 +20,13 @@ SPRING_N=8;
 
 module key() {
     translate([0,0,-KEY_WIDTH/2]) {
-        cylinder(d=KEY_D, h=KEY_WIDTH);
+        difference() {
+            cylinder(d=KEY_D, h=KEY_WIDTH);
+        ////
+            translate(KEY_HOLE_POSITION) {
+                cylinder(h = KEY_WIDTH, d = KEY_HOLE_D);
+            }
+        }
         translate([-KEY_COMB_H/2, 0,0])
             cube([KEY_COMB_H, KEY_L, KEY_WIDTH]);
     }
@@ -97,10 +106,12 @@ module handle() {
         offset = HANDLE_FACE_OFFSET;
         translate([0,0,(M/2+HANDLE_R-offset)]) cube(M, center=true);
         translate([0,0,-(M/2+HANDLE_R-offset)]) cube(M, center=true);
-        translate(1.1*KEY_D/2*[1,-0.5,0])
+        translate(KEY_HOLE_POSITION)
             m3_bolt();
-        translate(1.1*KEY_D/2*[-1,-0.5,0])
-            m3_bolt();
+        // translate(1.1*KEY_D/2*[1,-0.5,0])
+        //     m3_bolt();
+        // translate(1.1*KEY_D/2*[-1,-0.5,0])
+        //     m3_bolt();
         spring_clearance();
     } 
     spring_module();
@@ -115,7 +126,7 @@ difference() {
     translate([0,0,M/2])
         cube(M,center=true);
 }
-intersection() {
+*intersection() {
     handle();
     translate([0,0,M/2])
         cube(M,center=true);
